@@ -1,0 +1,112 @@
+
+class Ezednevnik
+{
+    public string Vibor { get; set; }
+    public string Description { get; set; }
+    public DateTime Date { get; set; }
+
+    public Ezednevnik(string vibor, string description, DateTime date)
+    {
+        Vibor = vibor;
+        Description = description;
+        Date = date;
+
+    }
+
+    public void DisplayInfo()
+    {
+        Console.WriteLine("Ваш выбор: " + Vibor);
+        Console.WriteLine("Описание: " + Description);
+        Console.WriteLine("Дата: " + Date.ToShortDateString());
+    }
+}
+
+class Program
+{
+    static List<Ezednevnik> ezednevnik = new List<Ezednevnik>();
+
+    static void Main(string[] args)
+    {
+       ezednevnik.Add(new Ezednevnik("Прийти в техникум на пары", "Прийти и отучиться 5 пар", new DateTime(2023, 10, 17)));
+        ezednevnik.Add(new Ezednevnik("Поспать", "Поспать дома", new DateTime(2023, 10, 18)));
+        ezednevnik.Add(new Ezednevnik("Опоздать на все пары", "Опоздать на все пары и потратить 1-2 часа на дорогу домой", new DateTime(2023, 10, 19)));
+
+        int currentNoteIndex = 0;
+
+        while (true)
+        {
+            Console.Clear();
+            DisplayMenu(currentNoteIndex);
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    currentNoteIndex = DecreaseIndex(currentNoteIndex);
+                    break;
+                case ConsoleKey.DownArrow:
+                    currentNoteIndex = IncreaseIndex(currentNoteIndex);
+                    break;
+                case ConsoleKey.Enter:
+                    DisplayNoteDetails(ezednevnik[currentNoteIndex]);
+                    break;
+            }
+        }
+    }
+
+    static void DisplayMenu(int currentIndex)
+    {
+        Console.WriteLine("Ежедневник");
+        Console.WriteLine("Дата: " + ezednevnik[currentIndex].Date.ToShortDateString());
+        Console.WriteLine();
+
+        for (int i = 0; i < ezednevnik.Count; i++)
+        {
+            if (i == currentIndex)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(ezednevnik[i].Vibor);
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine(ezednevnik[i].Vibor);
+            }
+        }
+    }
+
+    static void DisplayNoteDetails(Ezednevnik note)
+    {
+        Console.Clear();
+        note.DisplayInfo();
+        Console.WriteLine();
+
+        Console.WriteLine("Нажмите любую клавишу, чтобы вернуться в меню...");
+        Console.ReadKey();
+    }
+
+    static int IncreaseIndex(int currentIndex)
+    {
+        if (currentIndex < ezednevnik.Count - 1)
+        {
+            return currentIndex + 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    static int DecreaseIndex(int currentIndex)
+    {
+        if (currentIndex > 0)
+        {
+            return currentIndex - 1;
+        }
+        else
+        {
+            return ezednevnik.Count - 1;
+        }
+    }
+}
